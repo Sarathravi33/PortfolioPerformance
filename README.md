@@ -13,25 +13,37 @@ The implementation follows a standard Spring Boot layered structure:
 ```
 src/main/java/com/portfolio/performance/
 ├── controller/
-│   └── PerformanceController.java      ← REST endpoint, HTTP status mapping
+│   ├── PerformanceController.java      ← REST endpoint, HTTP status mapping
+│   └── GlobalExceptionHandler.java     ← Maps MethodArgumentNotValidException → 400, InvalidInputException → 422
+├── exception/
+│   └── InvalidInputException.java      ← Runtime exception carrying the INVALID_INPUT response body
 ├── service/
-│   ├── DailyReturnService.java         ← Orchestrates validation → calculation → review
-│   └── CalculationReviewer.java        ← Custom review agent (REVIEW_REQUIRED logic)
+│   ├── DailyReturnService.java         ← Orchestrates validation → calculation → review → persist
+│   ├── CalculationReviewer.java        ← Custom review agent (REVIEW_REQUIRED logic)
+│   └── ReviewDecision.java             ← Record: status + reasons returned by CalculationReviewer
 ├── validator/
-│   └── DailyReturnValidator.java       ← INVALID_INPUT business rule enforcement
+│   ├── DailyReturnValidator.java       ← INVALID_INPUT business rule enforcement
+│   └── ValidationResult.java          ← Record: isValid + reasons returned by DailyReturnValidator
 ├── repository/
-│   └── ValuationAuditRepository.java   ← JPA repository; persists each request to H2
+│   └── ValuationAuditRepository.java   ← JPA repository; persists every request to H2
 ├── model/
 │   └── ValuationAudit.java             ← JPA entity (audit record)
 ├── dto/
-│   ├── DailyReturnRequest.java         ← Inbound payload
-│   └── DailyReturnResponse.java        ← Outbound response
+│   ├── DailyReturnRequest.java         ← Inbound payload with Bean Validation annotations
+│   ├── DailyReturnResponse.java        ← Outbound response with static Builder
+│   └── ReturnStatus.java               ← Enum: VALID | REVIEW_REQUIRED | INVALID_INPUT
 └── PortfolioPerformanceApplication.java
 
+src/main/resources/
+└── application.properties              ← Port 8081, H2 datasource, JPA, H2 console config
+
 src/test/java/com/portfolio/performance/
-├── service/DailyReturnServiceTest.java
-├── validator/DailyReturnValidatorTest.java
-└── controller/PerformanceControllerIntegrationTest.java
+├── validator/
+│   └── DailyReturnValidatorTest.java
+├── service/
+│   └── DailyReturnServiceTest.java
+└── controller/
+    └── PerformanceControllerIntegrationTest.java
 ```
 
 ### Custom Agent — Calculation Reviewer
@@ -118,8 +130,15 @@ mvn clean install
 
 ### Run the Application
 
+**Option A — Maven plugin (development)**
 ```bash
 mvn spring-boot:run
+```
+
+**Option B — Executable JAR (production)**
+```bash
+mvn package -DskipTests
+java -jar target/portfolio-performance-1.0.0.jar
 ```
 
 Server starts on `http://localhost:8081`.
@@ -202,7 +221,7 @@ Runs unit tests (validator, service) and integration tests (MockMvc full round-t
   "excessReturnPct":    7.2,
   "status":             "REVIEW_REQUIRED",
   "reasons": [
-    "Portfolio return (9.0000%) deviates from benchmark (1.8%) by 7.2000%, exceeding the 5% threshold."
+    "Portfolio return (9.0000%) deviates from benchmark (1.8000%) by 7.2000%, exceeding the 5% threshold."
   ],
   "processedAt":        "2026-06-14T10:30:00.000Z"
 }
@@ -229,8 +248,9 @@ Runs unit tests (validator, service) and integration tests (MockMvc full round-t
 
 ```json
 {
-  "error":  "Missing required fields",
-  "fields": ["currency"]
+  "errors": [
+    { "field": "currency", "message": "currency is required" }
+  ]
 }
 ```
 
