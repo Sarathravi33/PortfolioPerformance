@@ -1,0 +1,3 @@
+com\portfolio\performance\controller\PerformanceControllerIntegrationTest.class
+com\portfolio\performance\validator\DailyReturnValidatorTest.class
+com\portfolio\performance\service\DailyReturnServiceTest.class

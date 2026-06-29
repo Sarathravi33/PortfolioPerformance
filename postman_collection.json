@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Portfolio Performance API",
+    "description": "Collection for POST /api/performance/daily-return — covers VALID, REVIEW_REQUIRED, INVALID_INPUT, and 400 scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. VALID — Spec Example",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1001\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1035000,\n  \"netCashFlow\": 10000,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "2. REVIEW_REQUIRED — Excess Return > 5%",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1002\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1090000,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "3. REVIEW_REQUIRED — Cash Flow > 20% of BMV",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1003\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1025000,\n  \"netCashFlow\": 250000,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "4. REVIEW_REQUIRED — Both Conditions (Two Reasons)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1004\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1090000,\n  \"netCashFlow\": 250000,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "5. INVALID_INPUT — Negative Begin Market Value (R1)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1005\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": -500,\n  \"endMarketValue\": 1000,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "6. INVALID_INPUT — Negative End Market Value (R2)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1006\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": -100,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "7. INVALID_INPUT — Missing Currency (R3)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1007\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1035000,\n  \"netCashFlow\": 10000,\n  \"benchmarkReturnPct\": 1.8,\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "8. INVALID_INPUT — Begin Zero End Non-Zero (R4)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1008\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 0,\n  \"endMarketValue\": 50000,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "9. INVALID_INPUT — Multiple Failures (R1 + R2)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1009\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": -100,\n  \"endMarketValue\": -200,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "10. 400 Bad Request — Currency Field Omitted",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1010\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000,\n  \"endMarketValue\": 1035000,\n  \"netCashFlow\": 10000,\n  \"benchmarkReturnPct\": 1.8,\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "11. 400 Bad Request — Multiple Fields Missing",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 1000000\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    },
+    {
+      "name": "12. Edge Case — Both Market Values Zero",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/performance/daily-return", "host": ["localhost"], "port": "8081", "path": ["api", "performance", "daily-return"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"portfolioId\": \"PF-1012\",\n  \"valuationDate\": \"2026-06-14\",\n  \"beginMarketValue\": 0,\n  \"endMarketValue\": 0,\n  \"netCashFlow\": 0,\n  \"benchmarkReturnPct\": 1.8,\n  \"currency\": \"USD\",\n  \"requestedBy\": \"advisor01\"\n}"
+        }
+      },
+      "response": [],
+      "_postman_previewlanguage": "json"
+    }
+  ]
+}

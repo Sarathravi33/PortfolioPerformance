@@ -122,11 +122,11 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-Server starts on `http://localhost:8080`.
+Server starts on `http://localhost:8081`.
 
 ### H2 Console (in-memory DB browser)
 
-Navigate to `http://localhost:8080/h2-console` in your browser.
+Navigate to `http://localhost:8081/h2-console` in your browser.
 
 | Field | Value |
 |-------|-------|
@@ -240,7 +240,7 @@ Runs unit tests (validator, service) and integration tests (MockMvc full round-t
 
 ```bash
 # VALID — spec example (portfolioReturnPct = 2.5%, excessReturnPct = 0.7%)
-curl -s -X POST http://localhost:8080/api/performance/daily-return \
+curl -s -X POST http://localhost:8081/api/performance/daily-return \
   -H "Content-Type: application/json" \
   -d '{
     "portfolioId": "PF-1001",
@@ -254,7 +254,7 @@ curl -s -X POST http://localhost:8080/api/performance/daily-return \
   }'
 
 # REVIEW_REQUIRED — excess return > 5%
-curl -s -X POST http://localhost:8080/api/performance/daily-return \
+curl -s -X POST http://localhost:8081/api/performance/daily-return \
   -H "Content-Type: application/json" \
   -d '{
     "portfolioId": "PF-1002",
@@ -268,7 +268,7 @@ curl -s -X POST http://localhost:8080/api/performance/daily-return \
   }'
 
 # REVIEW_REQUIRED — cash flow > 20% of begin market value
-curl -s -X POST http://localhost:8080/api/performance/daily-return \
+curl -s -X POST http://localhost:8081/api/performance/daily-return \
   -H "Content-Type: application/json" \
   -d '{
     "portfolioId": "PF-1003",
@@ -282,7 +282,7 @@ curl -s -X POST http://localhost:8080/api/performance/daily-return \
   }'
 
 # INVALID_INPUT — negative begin market value
-curl -s -X POST http://localhost:8080/api/performance/daily-return \
+curl -s -X POST http://localhost:8081/api/performance/daily-return \
   -H "Content-Type: application/json" \
   -d '{
     "portfolioId": "PF-1004",
@@ -296,7 +296,7 @@ curl -s -X POST http://localhost:8080/api/performance/daily-return \
   }'
 
 # INVALID_INPUT — missing currency
-curl -s -X POST http://localhost:8080/api/performance/daily-return \
+curl -s -X POST http://localhost:8081/api/performance/daily-return \
   -H "Content-Type: application/json" \
   -d '{
     "portfolioId": "PF-1005",
